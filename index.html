@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touch the Grass Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e0f7fa;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .game-info {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #gameArea {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            background-color: #a5d6a7;
+            border: 2px solid #388e3c;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        /* Grass styling */
+        .grass {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+        
+        /* Create a grass-like appearance with multiple blades */
+        .grass::before,
+        .grass::after,
+        .grass i::before,
+        .grass i::after,
+        .grass i {
+            content: '';
+            position: absolute;
+            background: #4caf50;
+            width: 10px;
+            height: 30px;
+            border-radius: 10px 10px 0 0;
+            bottom: 0;
+            transform-origin: bottom center;
+        }
+        
+        .grass::before {
+            left: 15px;
+            transform: rotate(-20deg);
+            background: #388e3c;
+        }
+        
+        .grass::after {
+            left: 25px;
+            transform: rotate(5deg);
+        }
+        
+        .grass i {
+            display: block;
+            left: 20px;
+            transform: rotate(-5deg);
+            background: #43a047;
+        }
+        
+        .grass i::before {
+            left: -15px;
+            transform: rotate(-15deg);
+            background: #2e7d32;
+            height: 25px;
+        }
+        
+        .grass i::after {
+            left: 5px;
+            transform: rotate(15deg);
+            background: #66bb6a;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Touch the Grass Game</h1>
+    
+    <div class="game-info">
+        <p>Click on as many grass tufts as you can in 30 seconds!</p>
+        <div>
+            <span>Score: <span id="score">0</span></span> | 
+            <span>Time: <span id="timer">30</span>s</span>
+        </div>
+        <button id="startGame">Start Game</button>
+    </div>
+    
+    <div id="gameArea"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameArea = document.getElementById('gameArea');
+            const scoreDisplay = document.getElementById('score');
+            const timerDisplay = document.getElementById('timer');
+            const startButton = document.getElementById('startGame');
+            
+            let score = 0;
+            let timeLeft = 30;
+            let gameActive = false;
+            let timer;
+            
+            startButton.addEventListener('click', () => {
+                if (!gameActive) {
+                    startGame();
+                }
+            });
+            
+            function startGame() {
+                // Reset game state
+                gameArea.innerHTML = '';
+                score = 0;
+                timeLeft = 30;
+                gameActive = true;
+                scoreDisplay.textContent = score;
+                timerDisplay.textContent = timeLeft;
+                startButton.textContent = 'Game in Progress';
+                
+                // Create first grass tuft
+                createGrass();
+                
+                // Start timer
+                timer = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        endGame();
+                    }
+                }, 1000);
+            }
+            
+            function endGame() {
+                clearInterval(timer);
+                gameActive = false;
+                startButton.textContent = 'Play Again';
+                alert(`Game Over! Your score: ${score}`);
+            }
+            
+            function createGrass() {
+                if (!gameActive) return;
+                
+                const grass = document.createElement('div');
+                grass.classList.add('grass');
+                
+                // Add an i element inside the grass div to create the grass tuft
+                const blade = document.createElement('i');
+                grass.appendChild(blade);
+                
+                grass.style.top = Math.random() * (gameArea.clientHeight - 50) + 'px';
+                grass.style.left = Math.random() * (gameArea.clientWidth - 50) + 'px';
+                
+                grass.addEventListener('click', () => {
+                    if (gameActive) {
+                        score++;
+                        scoreDisplay.textContent = score;
+                        grass.remove();
+                        createGrass();
+                        
+                        // Add another grass for increased difficulty as score gets higher
+                        if (score % 5 === 0 && score > 0) {
+                            createGrass();
+                        }
+                    }
+                });
+                
+                gameArea.appendChild(grass);
+            }
+        });
+    </script>
+</body>
+</html>
