@@ -112,10 +112,10 @@
     <h1>Touch the Grass Game</h1>
     
     <div class="game-info">
-        <p>Click on as many grass tufts as you can in 30 seconds!</p>
+        <p>Click on as many grass tufts as you can in 10 seconds!</p>
         <div>
             <span>Score: <span id="score">0</span></span> | 
-            <span>Time: <span id="timer">30</span>s</span>
+            <span>Time: <span id="timer">10</span>s</span>
         </div>
         <button id="startGame">Start Game</button>
     </div>
@@ -130,7 +130,7 @@
             const startButton = document.getElementById('startGame');
             
             let score = 0;
-            let timeLeft = 30;
+            let timeLeft = 10;
             let gameActive = false;
             let timer;
             
@@ -144,7 +144,7 @@
                 // Reset game state
                 gameArea.innerHTML = '';
                 score = 0;
-                timeLeft = 30;
+                timeLeft = 10;
                 gameActive = true;
                 scoreDisplay.textContent = score;
                 timerDisplay.textContent = timeLeft;
@@ -168,7 +168,7 @@
                 clearInterval(timer);
                 gameActive = false;
                 startButton.textContent = 'Play Again';
-                alert(`Game Over! Your score: ${score}`);
+                alert(`Game Over! Your score: ${score}\nSevda`);
             }
             
             function createGrass() {
